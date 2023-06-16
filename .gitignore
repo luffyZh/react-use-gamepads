@@ -1,0 +1,4 @@
+# NORMAL
+node_modules/
+# OSX
+.DS_Store
