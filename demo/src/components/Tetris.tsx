@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSound from "use-sound";
 import Sound from "react-sound";
 import { isMobile } from "react-device-detect";
@@ -57,10 +57,13 @@ const Tetris = (): JSX.Element => {
   const [playGameOverSFX] = useSound("/audio/game-over.wav", { volume: 0.25 });
   const [playSRSTrickSFX] = useSound("/audio/srs-trick.wav", { volume: 0.25 });
   const [playTetrisSFX] = useSound("/audio/tetris.wav", { volume: 0.25 });
+  const [gamepads, setGamepads] = useState<Gamepad[]>([]);
 
-  const gamepads = useGamepads();
+  const onGamepadsUpdate = (gamepads: Gamepad[]) => setGamepads(gamepads);
 
-  console.log(gamepads, 3232323);
+  useGamepads({
+    onGamepadsUpdate,
+  });
 
   const gameState = useTetris();
   const { rotate, move, start, fastDrop, hardDrop, toggleHint, registerCallback } = useTetrisActions();
@@ -202,7 +205,7 @@ const Tetris = (): JSX.Element => {
       <RightSideContainer>
         <RightSide>
           <BlueBackground />
-          <InfoPanel />
+          <InfoPanel gamepads={gamepads} />
         </RightSide>
       </RightSideContainer>
     </Layout>

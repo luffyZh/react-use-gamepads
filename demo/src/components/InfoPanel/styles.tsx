@@ -17,7 +17,7 @@ export const InfoPanelContainer = styled.div`
 `;
 
 export const Content = styled.div`
-  height: 70%;
+  height: 55%;
 `;
 
 export const Key = styled.span`
@@ -38,6 +38,13 @@ export const ControlsContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: end;
+  gap: 10px;
+`;
+
+export const GamepadContainer = styled.div`
+  height: 15%;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 `;
 

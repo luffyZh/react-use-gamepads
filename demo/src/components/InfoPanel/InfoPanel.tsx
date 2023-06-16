@@ -6,18 +6,35 @@ import {
   ControlRow,
   ControlsContainer,
   InfoPanelContainer,
+  GamepadContainer,
 } from "./styles";
 import ActiveGame from "@/components/InfoPanel/ActiveGame/ActiveGame";
 import Leaderboard from "@/components/InfoPanel/Leaderboard/Leaderboard";
 import { PlayButton } from "../styles";
 
-const InfoPanel = (): JSX.Element => {
+const InfoPanel = ({ gamepads }: any): JSX.Element => {
   const gameState = useTetris();
   const { toggleHint } = useTetrisActions();
-
   return (
     <InfoPanelContainer>
       <Content>{gameState.started ? <ActiveGame /> : <Leaderboard />}</Content>
+      <GamepadContainer>
+        <h2>Gamepad Status</h2>
+        {
+          !gamepads?.length ? (
+            <ControlRow style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <h3>未检测到手柄连接</h3>
+            </ControlRow>
+          ) : gamepads.map((gamepad: any, index: number) => (
+            <ControlRow key={index}>
+              <h4>Gamepad {index + 1} <span style={{ color: 'green' }}>Connected</span></h4>
+              <Center>
+                <Key></Key>
+              </Center>
+            </ControlRow>
+          ))
+        }
+      </GamepadContainer>
       <ControlsContainer>
         <h2>Controls</h2>
         <ControlRow>

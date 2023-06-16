@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 export interface IGamepadProps {
   gamepadButtonsMap?: Record<number, string>;
+  onGamepadsUpdate?: (gamepads: Gamepad[]) => void;
   onAxesChange?: (data: IGamepadAxesData) => void;
   onButtonDown?: (data: IGamepadButtonsData) => void;
 };
@@ -51,13 +52,15 @@ export interface IGamepadButtonsData extends IGamepadEventData {
   buttons: number[] | { key: number, value: string }[];
 }
 
-export default function useGamepads(props?: IGamepadProps): GamepadsRef {
+export default function useGamepads(props?: IGamepadProps) {
   const {
     gamepadButtonsMap = INITIAL_GAMEPAD_BUTTONS_MAP,
+    onGamepadsUpdate = (gamepads: Gamepad[]) => console.log('onGamepadsUpdate: ', gamepads),
     onAxesChange = (data: IGamepadAxesData) => console.log('onAxisChange: ', data),
     onButtonDown = (data: IGamepadButtonsData) => console.log('onButtonDown: ', data),
   } = props || {};
-  const gamepadsRef = useRef<GamepadsRef>([]);
+
+  const gamepadsRef = useRef<GamepadsRef>({});
 
   // Initialize gamepads connected
   useEffect(() => {
@@ -75,10 +78,10 @@ export default function useGamepads(props?: IGamepadProps): GamepadsRef {
         if (!gamepad) {
           return;
         }
-        gamepadsRef.current = {
-          ...gamepadsRef.current,
+        gamepadsRef.current = Object.assign({}, gamepadsRef.current, {
           [gamepad.index]: gamepad,
-        };
+        });
+        onGamepadsUpdate && onGamepadsUpdate(Object.values(gamepadsRef.current));
         let buttons: any[] = [];
         for (let i = 0; i < gamepad.buttons.length; i++) {
           if (gamepad.buttons[i].pressed) {
@@ -127,6 +130,4 @@ export default function useGamepads(props?: IGamepadProps): GamepadsRef {
       window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected);
     };
   }, []);
-
-  return gamepadsRef.current;
 }
