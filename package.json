@@ -1,6 +1,6 @@
 {
   "name": "react-use-gamepads",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "React Hooks for Better Using the Gamepad API inside React .",
   "main": "dist/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "typescript": "^5.1.3"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   }
 }
