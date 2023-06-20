@@ -17,7 +17,6 @@ import {
   checkTetrominoLocked,
 } from "@/helpers/tetris.logic";
 import { getTickTime } from "@/helpers/tetris.helpers";
-import { debounce } from "lodash-es";
 
 type TetrisActionsContext = {
   rotate: (side: "left" | "right") => void;
@@ -105,7 +104,7 @@ const gameStateReducer = (
   }
 };
 
-let tickInterval: NodeJS.Timeout;
+let tickInterval: any;
 
 export const TetrisProvider: React.FC<React.PropsWithChildren> = ({
   children,

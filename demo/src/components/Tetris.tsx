@@ -25,7 +25,7 @@ import type { IGamepadButtonsData, IGamepadAxesData } from "react-use-gamepads";
 
 let pressedKeys: { [key in string]: boolean } = {};
 let moveCooldown = false;
-let moveCooldownTimeout: NodeJS.Timeout;
+let moveCooldownTimeout: any;
 const INPUT_INTERVAL = 50;
 const MOVE_COOLDOWN = 200;
 
