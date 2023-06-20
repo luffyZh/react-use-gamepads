@@ -1,4 +1,5 @@
-# react-use-gamepad 🕹🎮
+![react-use-gamepads](./docs/images/gamepad.webp)
+# react-use-gamepads 🕹🎮
 
 React Hooks for Better Using the Gamepad API inside React.
 
