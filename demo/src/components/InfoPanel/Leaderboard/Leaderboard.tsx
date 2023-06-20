@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
 import { useTetris } from "@/hooks/useTetris";
-import { LeaderboardContainer, ScoresContainer, ScoreRow } from "./styles";
+import { LeaderboardContainer } from "./styles";
 
-const medals = {
-  0: "🥇",
-  1: "🥈",
-  2: "🥉",
-} as { [key in number]: string };
+// const medals = {
+//   0: "🥇",
+//   1: "🥈",
+//   2: "🥉",
+// } as { [key in number]: string };
 
 const Leaderboard = (): JSX.Element => {
   const gameState = useTetris();

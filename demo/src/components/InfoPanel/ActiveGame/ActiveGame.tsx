@@ -39,7 +39,7 @@ const ActiveGame = (): JSX.Element => {
             {EmptyDisplayCells.map((row, rowIndex) => {
               return (
                 <NextRow key={`next-tetromino-row-${rowIndex}`}>
-                  {row.map((col, colIndex) => {
+                  {row.map((_, colIndex) => {
                     return (
                       <NextCell
                         key={`next-tetromino-cell-${rowIndex}-${colIndex}`}

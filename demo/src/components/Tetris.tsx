@@ -3,7 +3,6 @@ import useSound from "use-sound";
 import Sound from "react-sound";
 import { isMobile } from "react-device-detect";
 import styled from "styled-components";
-
 import { useTetrisActions, useTetris } from "@/hooks/useTetris";
 import {
   Board,
@@ -20,7 +19,9 @@ import Layout from "@/components/Layout";
 import BoardCells from "@/components/BoardCells/BoardCells";
 import InfoPanel from "@/components/InfoPanel/InfoPanel";
 import GameOver from "@/components/GameOver/GameOver";
-import useGamepads from "@/hooks/useGamepads";
+// import useGamepads, { INITIAL_GAMEPAD_BUTTONS_MAP } from "@/hooks/useGamepads";
+import useGamepads, { INITIAL_GAMEPAD_BUTTONS_MAP } from "react-use-gamepads";
+import type { IGamepadButtonsData, IGamepadAxesData } from "react-use-gamepads";
 
 let pressedKeys: { [key in string]: boolean } = {};
 let moveCooldown = false;
@@ -58,15 +59,74 @@ const Tetris = (): JSX.Element => {
   const [playSRSTrickSFX] = useSound("/audio/srs-trick.wav", { volume: 0.25 });
   const [playTetrisSFX] = useSound("/audio/tetris.wav", { volume: 0.25 });
   const [gamepads, setGamepads] = useState<Gamepad[]>([]);
+  const [pressedButton, setPressedButton] = useState<any>();
 
   const onGamepadsUpdate = (gamepads: Gamepad[]) => setGamepads(gamepads);
 
-  useGamepads({
-    onGamepadsUpdate,
-  });
-
   const gameState = useTetris();
   const { rotate, move, start, fastDrop, hardDrop, toggleHint, registerCallback } = useTetrisActions();
+
+  function gamepadPlay(value: string) {
+    fastDrop(false);
+    switch (value) {
+      case 'A':
+        rotate("left");
+        break;
+      case 'B':
+        rotate("right");
+        break;
+      case 'X':
+        console.log('do nothing');
+        break;
+      case 'Y':
+        console.log('do nothing');
+        break;
+      case 'START':
+        start();
+        break;
+      case 'UP':
+        hardDrop();
+        break;
+      case 'DOWN':
+        fastDrop(true);
+        break;
+      case 'LEFT':
+        move("left");
+        break;
+      case 'RIGHT':
+        move("right");
+        break;
+      default:
+        break;
+    }
+  }
+
+  const onButtonsDown = (data: IGamepadButtonsData) => {
+    const { gamepad, index, buttons } = data;
+    if (!buttons?.length) return;
+    console.log(`Cur Gamepad: ${gamepad}, Gamepad Index: ${index}.`);
+    console.log(`Cur Pressed Buttons: `, buttons);
+    setPressedButton((buttons[0] as any)?.value);
+    gamepadPlay((buttons[0] as any)?.value);
+  };
+
+  const onAxesChange = (data: IGamepadAxesData) => {
+    const { gamepad, index, axes } = data;
+    console.log(`Cur Gamepad: ${gamepad}, Gamepad Index: ${index}.`);
+    console.log(`Cur Axes: 👇🏼👇🏼👇🏼👇🏼.`);
+    console.log(`axes: `, axes);
+    console.log(`left axes X: `, axes[0]);
+    console.log(`left axes Y: `, axes[1]);
+    console.log(`right axes X: `, axes[2]);
+    console.log(`right axes Y: `, axes[3]);
+  }
+
+  useGamepads({
+    gamepadButtonsMap: INITIAL_GAMEPAD_BUTTONS_MAP,
+    onGamepadsUpdate,
+    onButtonsDown,
+    onAxesChange,
+  });
 
   useEffect(() => {
     registerCallback("onMove", () => {
@@ -107,19 +167,19 @@ const Tetris = (): JSX.Element => {
 
   useEffect(() => {
     let interval = setInterval(() => {
-      if (pressedKeys["ArrowLeft"] && !moveCooldown) move("left");
-      if (pressedKeys["ArrowRight"] && !moveCooldown) move("right");
+      if ((pressedKeys["ArrowLeft"]) && !moveCooldown) move("left");
+      if ((pressedKeys["ArrowRight"]) && !moveCooldown) move("right");
     }, INPUT_INTERVAL);
     return () => {
       clearInterval(interval);
     };
   }, [rotate, start, move, fastDrop, hardDrop, toggleHint]);
 
-  // 键盘操作
+  // 键盘 手柄操作
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Enter" && !e.repeat) start();
-      if (e.code === "ArrowLeft" && !e.repeat) {
+      if ((e.code === "Enter") && !e.repeat) start();
+      if ((e.code === "ArrowLeft") && !e.repeat) {
         clearTimeout(moveCooldownTimeout);
         moveCooldown = true;
         moveCooldownTimeout = setTimeout(() => {
@@ -127,7 +187,7 @@ const Tetris = (): JSX.Element => {
         }, MOVE_COOLDOWN);
         move("left");
       }
-      if (e.code === "ArrowRight" && !e.repeat) {
+      if ((e.code === "ArrowRight") && !e.repeat) {
         clearTimeout(moveCooldownTimeout);
         moveCooldown = true;
         moveCooldownTimeout = setTimeout(() => {
@@ -135,11 +195,11 @@ const Tetris = (): JSX.Element => {
         }, MOVE_COOLDOWN);
         move("right");
       }
-      if (e.code === "KeyZ" && !e.repeat) rotate("left");
-      if (e.code === "KeyX" && !e.repeat) rotate("right");
-      if (e.code === "ArrowDown") fastDrop(true);
-      if (e.code === "ArrowUp" && !e.repeat) hardDrop();
-      if (e.code === "KeyH" && !e.repeat) toggleHint();
+      if ((e.code === "KeyZ") && !e.repeat) rotate("left");
+      if ((e.code === "KeyX") && !e.repeat) rotate("right");
+      if ((e.code === "ArrowDown")) fastDrop(true);
+      if ((e.code === "ArrowUp") && !e.repeat) hardDrop();
+      if ((e.code === "KeyH") && !e.repeat) toggleHint();
       pressedKeys[e.code] = true;
     };
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -157,8 +217,6 @@ const Tetris = (): JSX.Element => {
       document.removeEventListener("keydown", handleKeyUp, false);
     };
   }, [rotate, start, move, fastDrop, hardDrop]);
-
-  // 手柄操作
 
   const handleStartClick = () => start();
 
@@ -205,7 +263,7 @@ const Tetris = (): JSX.Element => {
       <RightSideContainer>
         <RightSide>
           <BlueBackground />
-          <InfoPanel gamepads={gamepads} />
+          <InfoPanel gamepads={gamepads} pressedButton={pressedButton} />
         </RightSide>
       </RightSideContainer>
     </Layout>

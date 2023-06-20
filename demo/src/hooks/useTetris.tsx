@@ -17,6 +17,7 @@ import {
   checkTetrominoLocked,
 } from "@/helpers/tetris.logic";
 import { getTickTime } from "@/helpers/tetris.helpers";
+import { debounce } from "lodash-es";
 
 type TetrisActionsContext = {
   rotate: (side: "left" | "right") => void;
@@ -214,5 +215,14 @@ export const useTetris = (): GameState => {
 export const useTetrisActions = () => {
   const { rotate, move, start, fastDrop, hardDrop, registerCallback, setScoreId, toggleHint } =
     useContext(TetrisActionsContext);
-  return { rotate, move, start, fastDrop, hardDrop, registerCallback, setScoreId, toggleHint };
+  return {
+    rotate,
+    move,
+    start,
+    fastDrop,
+    hardDrop,
+    registerCallback,
+    setScoreId,
+    toggleHint
+  };
 };

@@ -4,7 +4,7 @@ export interface IGamepadProps {
   gamepadButtonsMap?: Record<number, string>;
   onGamepadsUpdate?: (gamepads: Gamepad[]) => void;
   onAxesChange?: (data: IGamepadAxesData) => void;
-  onButtonDown?: (data: IGamepadButtonsData) => void;
+  onButtonsDown?: (data: IGamepadButtonsData) => void;
 };
 
 /**
@@ -54,10 +54,10 @@ export interface IGamepadButtonsData extends IGamepadEventData {
 
 export default function useGamepads(props?: IGamepadProps) {
   const {
-    gamepadButtonsMap = INITIAL_GAMEPAD_BUTTONS_MAP,
+    gamepadButtonsMap,
     onGamepadsUpdate = (gamepads: Gamepad[]) => console.log('onGamepadsUpdate: ', gamepads),
     onAxesChange = (data: IGamepadAxesData) => console.log('onAxisChange: ', data),
-    onButtonDown = (data: IGamepadButtonsData) => console.log('onButtonDown: ', data),
+    onButtonsDown = (data: IGamepadButtonsData) => console.log('onButtonDown: ', data),
   } = props || {};
 
   const gamepadsRef = useRef<GamepadsRef>({});
@@ -92,7 +92,7 @@ export default function useGamepads(props?: IGamepadProps) {
         }
 
         // 处理按钮点击事件
-        onButtonDown && onButtonDown({
+        onButtonsDown && onButtonsDown({
           gamepad,
           index,
           buttons,

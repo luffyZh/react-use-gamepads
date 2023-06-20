@@ -10,14 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-sound": "^1.2.0",
+    "react-use-gamepads": "^0.0.6",
     "styled-components": "^6.0.0-rc.3",
     "use-sound": "^4.0.1"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.7",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@types/react-sound": "^1.2.3",

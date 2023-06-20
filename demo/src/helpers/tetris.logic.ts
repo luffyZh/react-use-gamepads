@@ -284,7 +284,7 @@ export const clearLines = (gameState: GameState): GameState => {
     )
     .concat(
       placedTetrominos.filter(
-        (row, rowIndex) => !clearedLines.includes(rowIndex)
+        (_, rowIndex) => !clearedLines.includes(rowIndex)
       )
     ) as Board;
 
